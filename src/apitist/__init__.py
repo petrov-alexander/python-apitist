@@ -1,5 +1,9 @@
 """Apitist package"""
-from pkg_resources import DistributionNotFound, get_distribution
+try:
+    from importlib.metadata import version, PackageNotFoundError
+except ImportError:
+    # For Python < 3.8
+    from importlib_metadata import version, PackageNotFoundError
 
 from .constructor import (
     AttrsConverter,
@@ -64,11 +68,8 @@ __all__ = [
 ]
 
 try:
-    # Change here if project is renamed and does not equal the package name
     dist_name = "apitist"
-    __version__ = get_distribution(dist_name).version
-except DistributionNotFound as e:
+    __version__ = version(dist_name)
+except PackageNotFoundError as e:
     __version__ = "unknown"
     print(e)
-finally:
-    del get_distribution, DistributionNotFound
