@@ -251,9 +251,11 @@ class Session(OldSession):
         setattr(resp, "name", name)
         resp = self._run_hooks(self.response_hooks, resp)
 
-        self._structure_response(
-            resp, structure_type, structure_err_type or self.structure_err_type
-        )
+        # Structure only application/json content-type
+        if resp.headers.get("content-type") == "application/json":
+            self._structure_response(
+                resp, structure_type, structure_err_type or self.structure_err_type
+            )
 
         return resp
 
